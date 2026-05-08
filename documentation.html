@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>glsh.js v1.5.3 — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000;
+      --surface: #0d0d0d;
+      --border: #1e1e1e;
+      --accent: #5dffb8;
+      --accent2: #ff5dcd;
+      --accent3: #5db8ff;
+      --text: #fff;
+      --muted: #888;
+      --dimmed: #555;
+      --card: #0a0a0a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────────────────── */
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 32px 0;
+      background: var(--surface);
+    }
+
+    .sidebar-logo {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-logo h1 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .sidebar-logo h1 span { color: var(--accent); }
+
+    .sidebar-logo .ver {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .nav-group {
+      margin-bottom: 8px;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--dimmed);
+      padding: 8px 24px 4px;
+    }
+
+    aside a {
+      display: block;
+      padding: 5px 24px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.1s;
+    }
+
+    aside a:hover { color: var(--text); }
+    aside a.active { color: var(--accent); }
+
+    aside a code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+    }
+
+    /* ── MAIN ────────────────────────────────────────────────────────────── */
+    main {
+      max-width: 860px;
+      padding: 56px 56px 120px;
+    }
+
+    h1.page-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    h1.page-title span { color: var(--accent); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    h2.section-head {
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3.fn-head {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3.fn-head code {
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      color: var(--accent);
+      background: rgba(93,255,184,0.07);
+      padding: 2px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(93,255,184,0.15);
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+
+    .tag-fn  { color: var(--accent);  border-color: rgba(93,255,184,0.3); }
+    .tag-ret { color: var(--accent3); border-color: rgba(93,184,255,0.3); }
+
+    p { margin-bottom: 16px; color: #ccc; }
+
+    code { font-family: 'Courier New', monospace; font-size: 13px; color: var(--accent2); }
+
+    pre {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 22px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #ccc;
+    }
+
+    pre .kw  { color: #ff79c6; }
+    pre .fn  { color: #50fa7b; }
+    pre .str { color: #f1fa8c; }
+    pre .num { color: #bd93f9; }
+    pre .cm  { color: #6272a4; font-style: italic; }
+    pre .ty  { color: #8be9fd; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 28px;
+      font-size: 13px;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dimmed);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #151515;
+      vertical-align: top;
+      color: #bbb;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody td:first-child {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+
+    tbody td:nth-child(2) {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--accent3);
+    }
+
+    .ret-block {
+      background: rgba(93,184,255,0.05);
+      border: 1px solid rgba(93,184,255,0.15);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 12px 0 24px;
+      font-size: 13px;
+    }
+
+    .ret-block strong { color: var(--accent3); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px; }
+
+    .ret-block table { margin: 0; }
+
+    .effect-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 28px;
+    }
+
+    .effect-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .effect-item .name {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .effect-item .desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .effect-item .params {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--dimmed);
+      font-family: 'Courier New', monospace;
+    }
+
+    .alert {
+      background: rgba(255,93,205,0.06);
+      border: 1px solid rgba(255,93,205,0.2);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    .alert strong { color: var(--accent2); }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 60px 0;
+    }
+
+    footer {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 700px) {
+      body { grid-template-columns: 1fr; }
+      aside { display: none; }
+      main { padding: 32px 20px 80px; }
+      .effect-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ──────────────────────────────────────────────────────────── -->
+<aside>
+  <div class="sidebar-logo">
+    <h1><span>glsh</span>.js</h1>
+    <div class="ver">v1.5.3 — WebGL Effects Library</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Getting Started</div>
+    <a href="#install">Installation</a>
+    <a href="#overview">Overview</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Core API</div>
+    <a href="#glsl"><code>glsl()</code></a>
+    <a href="#effects"><code>effects()</code></a>
+    <a href="#imgsrc"><code>imgsrc()</code></a>
+    <a href="#videosrc"><code>videosrc()</code></a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Built-in Effects</div>
+    <a href="#fx-customShader">customShader</a>
+    <a href="#fx-hue">hue</a>
+    <a href="#fx-saturation">saturation</a>
+    <a href="#fx-rgbSplit">rgbSplit</a>
+    <a href="#fx-glitch">glitch</a>
+    <a href="#fx-bloom">bloom</a>
+    <a href="#fx-GaussBlur">GaussBlur</a>
+    <a href="#fx-wave">wave</a>
+    <a href="#fx-rippleDistort">rippleDistort</a>
+    <a href="#fx-rippleTransition">rippleTransition</a>
+    <a href="#fx-cubeTransition">cubeTransition</a>
+    <a href="#fx-halftone">halftone</a>
+    <a href="#fx-rainbow">rainbow</a>
+    <a href="#fx-kaleidoScope">kaleidoScope</a>
+    <a href="#fx-swirl">swirl</a>
+    <a href="#fx-shear">shear</a>
+    <a href="#fx-duotone">duotone</a>
+    <a href="#fx-tritone">tritone</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Links</div>
+    <a href="index.html">← Examples</a>
+    <a href="glsh.js">Source</a>
+  </div>
+</aside>
+
+<!-- ── MAIN ─────────────────────────────────────────────────────────────── -->
+<main>
+
+  <h1 class="page-title"><span>glsh</span>.js Documentation</h1>
+  <p class="subtitle">
+    WebGL shader effects library — v1.5.3.<br>
+    Zero dependencies. Real-time GPU effects for images and video in any modern browser.
+  </p>
+
+  <!-- INSTALL -->
+  <h2 class="section-head" id="install">Installation</h2>
+
+  <p>Include the script directly in your HTML:</p>
+  <pre><span class="cm">&lt;!-- Via CDN / local file --&gt;</span>
+<span class="kw">&lt;script</span> src=<span class="str">"glsh.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- Via npm --&gt;</span>
+npm install glsh</pre>
+
+  <p>When loaded via a <code>&lt;script&gt;</code> tag, <code>glsh</code> is available as a global. With a bundler, import it:</p>
+  <pre><span class="kw">import</span> glsh <span class="kw">from</span> <span class="str">'glsh'</span>;
+<span class="cm">// or</span>
+<span class="kw">const</span> glsh = <span class="fn">require</span>(<span class="str">'glsh'</span>);</pre>
+
+  <!-- OVERVIEW -->
+  <h2 class="section-head" id="overview">Overview</h2>
+
+  <p>glsh.js exposes four functions:</p>
+
+  <table>
+    <thead><tr><th>Function</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>glsl()</td><td>Run any custom GLSL fragment shader on a canvas</td></tr>
+      <tr><td>effects()</td><td>Apply a named built-in shader effect</td></tr>
+      <tr><td>imgsrc()</td><td>Load an image and return an HTMLImageElement for use as a texture</td></tr>
+      <tr><td>videosrc()</td><td>Load a video and return an HTMLVideoElement for use as a live texture</td></tr>
+    </tbody>
+  </table>
+
+  <p>All rendering runs in a <code>requestAnimationFrame</code> loop. Both <code>glsl()</code> and <code>effects()</code> return an instance object with <code>stop()</code>, <code>destroy()</code>, and other control methods.</p>
+
+  <div class="divider"></div>
+
+  <!-- GLSL -->
+  <h2 class="section-head" id="glsl">Core API</h2>
+
+  <h3 class="fn-head"><code>glsl(target, fragSrc, options?)</code> <span class="tag tag-fn">function</span></h3>
+
+  <p>Compiles and runs a custom GLSL fragment shader. The vertex shader and quad geometry are managed internally. The following uniforms are automatically injected into every shader:</p>
+
+  <table>
+    <thead><tr><th>Uniform</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>u_time</td><td>float</td><td>Elapsed time in seconds since rendering started</td></tr>
+      <tr><td>u_resolution</td><td>vec2</td><td>Canvas width and height in pixels</td></tr>
+      <tr><td>u_texture</td><td>sampler2D</td><td>Bound texture (if provided via <code>options.texture</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>target</td><td>string | HTMLCanvasElement</td><td>CSS selector string or canvas element. If a selector points to a non-canvas element, a canvas is inserted after it.</td></tr>
+      <tr><td>fragSrc</td><td>string</td><td>GLSL ES 1.00 fragment shader source code</td></tr>
+      <tr><td>options</td><td>object</td><td>Optional configuration (see below)</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Options:</strong></p>
+  <table>
+    <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>width</td><td>number</td><td>512</td><td>Canvas width in pixels</td></tr>
+      <tr><td>height</td><td>number</td><td>512</td><td>Canvas height in pixels</td></tr>
+      <tr><td>texture</td><td>HTMLImageElement | HTMLVideoElement | HTMLCanvasElement</td><td>—</td><td>Source bound to <code>u_texture</code></td></tr>
+      <tr><td>uniforms</td><td>object</td><td>{}</td><td>Additional uniforms: <code>{ myFloat: 1.0, myVec2: [0.5, 0.5] }</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="ret-block">
+    <strong>Returns — Instance object</strong>
+    <table>
+      <tbody>
+        <tr><td>canvas</td><td>HTMLCanvasElement</td><td>The rendering canvas</td></tr>
+        <tr><td>gl</td><td>WebGLRenderingContext</td><td>Raw WebGL context</td></tr>
+        <tr><td>program</td><td>WebGLProgram</td><td>Compiled shader program</td></tr>
+        <tr><td>stop()</td><td>void</td><td>Cancels the animation frame loop</td></tr>
+        <tr><td>setUniform(name, value)</td><td>void</td><td>Update a uniform value at runtime</td></tr>
+        <tr><td>destroy()</td><td>void</td><td>Stops rendering and frees GPU resources</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pre><span class="kw">const</span> frag = <span class="str">`
+  precision mediump float;
+  uniform float u_time;
+  uniform vec2  u_resolution;
+  varying vec2  v_texCoord;
+  void main() {
+    vec2 uv = v_texCoord;
+    vec3 col = 0.5 + 0.5 * cos(u_time + uv.xyx + vec3(0,2,4));
+    gl_FragColor = vec4(col, 1.0);
+  }
+`</span>;
+
+<span class="kw">const</span> inst = <span class="fn">glsh.glsl</span>(<span class="str">'#my-canvas'</span>, frag, {
+  width: <span class="num">800</span>,
+  height: <span class="num">450</span>
+});
+
+<span class="cm">// Stop after 5 seconds</span>
+<span class="fn">setTimeout</span>(() => inst.<span class="fn">stop</span>(), <span class="num">5000</span>);</pre>
+
+  <!-- EFFECTS -->
+  <h3 class="fn-head" id="effects"><code>effects(target, effectName, options?)</code> <span class="tag tag-fn">function</span></h3>
+
+  <p>Applies a named built-in effect. All effects accept a <code>texture</code> (image or video source) plus effect-specific parameters. Transition effects additionally accept <code>texture2</code>.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>target</td><td>string | HTMLCanvasElement</td><td>CSS selector or canvas element</td></tr>
+      <tr><td>effectName</td><td>string</td><td>One of the built-in effect names (see below)</td></tr>
+      <tr><td>options</td><td>object</td><td>Configuration including texture and effect parameters</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Common options (all effects):</strong></p>
+  <table>
+    <thead><tr><th>Key</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>texture</td><td>HTMLImageElement | HTMLVideoElement | HTMLCanvasElement</td><td>Primary texture source</td></tr>
+      <tr><td>texture2</td><td>HTMLImageElement | HTMLCanvasElement</td><td>Secondary texture (transition effects only)</td></tr>
+      <tr><td>width</td><td>number</td><td>Canvas width in pixels (default: 512)</td></tr>
+      <tr><td>height</td><td>number</td><td>Canvas height in pixels (default: 512)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ret-block">
+    <strong>Returns — Instance object</strong>
+    <table>
+      <tbody>
+        <tr><td>canvas</td><td>HTMLCanvasElement</td><td>The rendering canvas</td></tr>
+        <tr><td>stop()</td><td>void</td><td>Cancels the animation frame loop</td></tr>
+        <tr><td>setProgress(p)</td><td>void</td><td>Set transition progress 0–1 (transition effects)</td></tr>
+        <tr><td>updateTexture(src)</td><td>void</td><td>Swap the primary texture at runtime</td></tr>
+        <tr><td>destroy()</td><td>void</td><td>Stops rendering and frees GPU resources</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- IMGSRC -->
+  <h3 class="fn-head" id="imgsrc"><code>imgsrc(src, callback)</code> <span class="tag tag-fn">function</span></h3>
+
+  <p>Loads an image from a URL and returns an <code>HTMLImageElement</code> ready for use as a WebGL texture. Cross-origin images are handled automatically (<code>crossOrigin = 'anonymous'</code>).</p>
+
+  <table>
+    <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>src</td><td>string</td><td>URL of the image to load</td></tr>
+      <tr><td>callback</td><td>function(err, img)</td><td>Called when load completes. <code>err</code> is null on success, an Error on failure. <code>img</code> is the HTMLImageElement.</td></tr>
+    </tbody>
+  </table>
+
+  <pre><span class="fn">glsh.imgsrc</span>(<span class="str">'photo.jpg'</span>, <span class="kw">function</span>(err, img) {
+  <span class="kw">if</span> (err) { console.<span class="fn">error</span>(err); <span class="kw">return</span>; }
+  <span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'duotone'</span>, {
+    texture: img,
+    colorA: [<span class="num">0.05, 0.0, 0.3</span>],
+    colorB: [<span class="num">1.0, 0.85, 0.1</span>]
+  });
+});</pre>
+
+  <!-- VIDEOSRC -->
+  <h3 class="fn-head" id="videosrc"><code>videosrc(src, options?, callback)</code> <span class="tag tag-fn">function</span></h3>
+
+  <p>Loads a video and returns an <code>HTMLVideoElement</code> for use as a live-updating texture. The video texture is re-uploaded to the GPU each frame.</p>
+
+  <table>
+    <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>src</td><td>string</td><td>URL of the video</td></tr>
+      <tr><td>options</td><td>object</td><td>Optional: <code>loop</code> (true), <code>muted</code> (true), <code>autoplay</code> (true)</td></tr>
+      <tr><td>callback</td><td>function(err, video)</td><td>Called when the video is ready to play</td></tr>
+    </tbody>
+  </table>
+
+  <pre><span class="fn">glsh.videosrc</span>(<span class="str">'clip.mp4'</span>, { loop: <span class="kw">true</span>, muted: <span class="kw">true</span> }, <span class="kw">function</span>(err, video) {
+  <span class="kw">if</span> (err) { console.<span class="fn">error</span>(err); <span class="kw">return</span>; }
+  <span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'glitch'</span>, {
+    texture: video,
+    intensity: <span class="num">0.06</span>
+  });
+});</pre>
+
+  <div class="divider"></div>
+
+  <!-- BUILT-IN EFFECTS -->
+  <h2 class="section-head">Built-in Effects</h2>
+
+  <p>All effect names are passed as strings to <code>effects()</code>. The parameters below are set as keys in the <code>options</code> object alongside <code>texture</code>.</p>
+
+  <!-- customShader -->
+  <h3 class="fn-head" id="fx-customShader"><code>customShader</code></h3>
+  <p>Runs an arbitrary GLSL fragment shader through the <code>effects()</code> pipeline (texture binding, animation loop, etc.).</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>shader</td><td>string</td><td>passthrough</td><td>GLSL ES 1.00 fragment shader source</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'customShader'</span>, {
+  texture: img,
+  shader: <span class="str">`
+    precision mediump float;
+    uniform sampler2D u_texture;
+    uniform float u_time;
+    varying vec2 v_texCoord;
+    void main() {
+      vec2 uv = v_texCoord;
+      uv.x += sin(uv.y * 10.0 + u_time) * 0.05;
+      gl_FragColor = texture2D(u_texture, uv);
+    }`</span>
+});</pre>
+
+  <!-- hue -->
+  <h3 class="fn-head" id="fx-hue"><code>hue</code></h3>
+  <p>Continuously rotates the hue of the image using an RGB rotation matrix. The rotation angle advances with <code>u_time</code>, so the image cycles through all hues automatically.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>angle</td><td>number</td><td>0.0</td><td>Base hue offset in radians. Added to the animated time component.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'hue'</span>, { texture: img, angle: <span class="num">1.57</span> });</pre>
+
+  <!-- saturation -->
+  <h3 class="fn-head" id="fx-saturation"><code>saturation</code></h3>
+  <p>Scales the distance of each pixel's color from its luminance (greyscale) equivalent. Static — does not animate.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>amount</td><td>number</td><td>1.5</td><td>Saturation multiplier. 0 = greyscale, 1 = original, 2+ = oversaturated.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'saturation'</span>, { texture: img, amount: <span class="num">2.0</span> });</pre>
+
+  <!-- rgbSplit -->
+  <h3 class="fn-head" id="fx-rgbSplit"><code>rgbSplit</code></h3>
+  <p>Samples the red and blue channels from horizontally offset UV coordinates while keeping green centered. Produces a chromatic aberration effect.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>amount</td><td>number</td><td>0.01</td><td>Channel offset in UV units (0–0.05 is typical).</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'rgbSplit'</span>, { texture: img, amount: <span class="num">0.02</span> });</pre>
+
+  <!-- glitch -->
+  <h3 class="fn-head" id="fx-glitch"><code>glitch</code></h3>
+  <p>Applies randomised scanline horizontal displacement and RGB channel splitting, both keyed to time — producing a VHS/data-corruption aesthetic.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>intensity</td><td>number</td><td>0.05</td><td>Controls frequency of glitch events (0–0.5 range).</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'glitch'</span>, { texture: img, intensity: <span class="num">0.1</span> });</pre>
+
+  <!-- bloom -->
+  <h3 class="fn-head" id="fx-bloom"><code>bloom</code></h3>
+  <p>Blurs bright regions and adds them on top of the original image, simulating lens flare / light bleed from luminous areas.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>threshold</td><td>number</td><td>0.7</td><td>Luminance value above which bloom is applied (0–1).</td></tr>
+      <tr><td>intensity</td><td>number</td><td>1.5</td><td>Bloom brightness multiplier.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'bloom'</span>, {
+  texture: img,
+  threshold: <span class="num">0.6</span>,
+  intensity: <span class="num">2.0</span>
+});</pre>
+
+  <!-- GaussBlur -->
+  <h3 class="fn-head" id="fx-GaussBlur"><code>GaussBlur</code></h3>
+  <p>9×9 Gaussian kernel blur computed per-pixel. Radius is a multiplier on the per-pixel sample spacing.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>radius</td><td>number</td><td>2.0</td><td>Blur spread multiplier. 1 = minimal, 10 = heavy.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'GaussBlur'</span>, { texture: img, radius: <span class="num">4.0</span> });</pre>
+
+  <!-- wave -->
+  <h3 class="fn-head" id="fx-wave"><code>wave</code></h3>
+  <p>Displaces UV coordinates along both axes using animated sine functions, creating a fluid warping motion.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>amplitude</td><td>number</td><td>0.03</td><td>Maximum UV displacement (0.01–0.1 typical).</td></tr>
+      <tr><td>frequency</td><td>number</td><td>10.0</td><td>Spatial frequency of the waves.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'wave'</span>, {
+  texture: img,
+  amplitude: <span class="num">0.04</span>,
+  frequency: <span class="num">8.0</span>
+});</pre>
+
+  <!-- rippleDistort -->
+  <h3 class="fn-head" id="fx-rippleDistort"><code>rippleDistort</code></h3>
+  <p>Ripple emanates radially from the image center. Modulates the distance to center with a sine wave, displacing each pixel outward or inward.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>strength</td><td>number</td><td>0.05</td><td>Maximum radial displacement amount.</td></tr>
+      <tr><td>speed</td><td>number</td><td>3.0</td><td>Wave propagation speed multiplier.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'rippleDistort'</span>, {
+  texture: img,
+  strength: <span class="num">0.08</span>,
+  speed: <span class="num">5.0</span>
+});</pre>
+
+  <!-- rippleTransition -->
+  <h3 class="fn-head" id="fx-rippleTransition"><code>rippleTransition</code></h3>
+  <p>Blends between two textures using a radial ripple warp on the transition boundary. Drive <code>setProgress()</code> externally to animate the transition.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>texture</td><td>image/canvas</td><td>—</td><td>From texture (source A)</td></tr>
+      <tr><td>texture2</td><td>image/canvas</td><td>—</td><td>To texture (source B)</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="kw">const</span> inst = <span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'rippleTransition'</span>, {
+  texture: imgA,
+  texture2: imgB
+});
+
+<span class="cm">// Animate progress 0 → 1 over 1 second</span>
+<span class="kw">let</span> t = <span class="num">0</span>;
+<span class="kw">function</span> <span class="fn">tick</span>() {
+  t += <span class="num">0.01</span>;
+  inst.<span class="fn">setProgress</span>(t);
+  <span class="kw">if</span> (t < <span class="num">1.0</span>) <span class="fn">requestAnimationFrame</span>(tick);
+}
+<span class="fn">requestAnimationFrame</span>(tick);</pre>
+
+  <!-- cubeTransition -->
+  <h3 class="fn-head" id="fx-cubeTransition"><code>cubeTransition</code></h3>
+  <p>Simulates a 3D cube flip between two textures using perspective projection shortening. Drive <code>setProgress()</code> from 0 to 1 to complete the transition.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>texture</td><td>image/canvas</td><td>—</td><td>From texture (source A)</td></tr>
+      <tr><td>texture2</td><td>image/canvas</td><td>—</td><td>To texture (source B)</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="kw">const</span> inst = <span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'cubeTransition'</span>, {
+  texture: imgA,
+  texture2: imgB
+});
+inst.<span class="fn">setProgress</span>(<span class="num">0.5</span>); <span class="cm">// Paused mid-flip</span></pre>
+
+  <!-- halftone -->
+  <h3 class="fn-head" id="fx-halftone"><code>halftone</code></h3>
+  <p>Replaces the image with a dot-matrix halftone pattern. Each dot's radius is proportional to the local luminance. Black background is rendered for negative space.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>dotSize</td><td>number</td><td>6.0</td><td>Grid resolution (cells per axis). Higher = finer, more dots.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'halftone'</span>, { texture: img, dotSize: <span class="num">60</span> });</pre>
+
+  <!-- rainbow -->
+  <h3 class="fn-head" id="fx-rainbow"><code>rainbow</code></h3>
+  <p>Blends a UV-gradient hue cycle over the image, weighted by the image's luminance channel so highlights receive more rainbow color.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>speed</td><td>number</td><td>0.5</td><td>Hue cycle animation speed.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'rainbow'</span>, { texture: img, speed: <span class="num">0.3</span> });</pre>
+
+  <!-- kaleidoScope -->
+  <h3 class="fn-head" id="fx-kaleidoScope"><code>kaleidoScope</code></h3>
+  <p>Divides the image into <code>segments</code> angular slices from the center and mirrors them symmetrically. The pattern slowly rotates over time.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>segments</td><td>number</td><td>8.0</td><td>Number of mirror facets. Typical values: 4, 6, 8, 12.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'kaleidoScope'</span>, { texture: img, segments: <span class="num">12</span> });</pre>
+
+  <!-- swirl -->
+  <h3 class="fn-head" id="fx-swirl"><code>swirl</code></h3>
+  <p>Applies a rotation twist that is strongest at the center and falls off with distance. The twist angle also animates with time.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>angle</td><td>number</td><td>3.0</td><td>Maximum twist angle in radians at center.</td></tr>
+      <tr><td>radius</td><td>number</td><td>0.5</td><td>Falloff radius in UV units (0–1). Beyond this, no twist is applied.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'swirl'</span>, {
+  texture: img,
+  angle: <span class="num">5.0</span>,
+  radius: <span class="num">0.6</span>
+});</pre>
+
+  <!-- shear -->
+  <h3 class="fn-head" id="fx-shear"><code>shear</code></h3>
+  <p>Applies animated UV shear displacement: X coordinates are shifted by a function of Y, and Y by X, using animated sine/cosine coefficients. Areas outside the UV [0,1] boundary are rendered black.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>amountX</td><td>number</td><td>0.2</td><td>Shear intensity along the X axis.</td></tr>
+      <tr><td>amountY</td><td>number</td><td>0.0</td><td>Shear intensity along the Y axis.</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'shear'</span>, {
+  texture: img,
+  amountX: <span class="num">0.4</span>,
+  amountY: <span class="num">0.1</span>
+});</pre>
+
+  <!-- duotone -->
+  <h3 class="fn-head" id="fx-duotone"><code>duotone</code></h3>
+  <p>Maps pixel luminance to a linear interpolation between two colors. Shadows map to <code>colorA</code>, highlights to <code>colorB</code>. Static — does not animate.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>colorA</td><td>[r, g, b]</td><td>[0.1, 0.0, 0.5]</td><td>Shadow color (RGB, each 0–1)</td></tr>
+      <tr><td>colorB</td><td>[r, g, b]</td><td>[1.0, 0.8, 0.0]</td><td>Highlight color (RGB, each 0–1)</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'duotone'</span>, {
+  texture: img,
+  colorA: [<span class="num">0.05, 0.0, 0.3</span>],
+  colorB: [<span class="num">1.0,  0.85, 0.0</span>]
+});</pre>
+
+  <!-- tritone -->
+  <h3 class="fn-head" id="fx-tritone"><code>tritone</code></h3>
+  <p>Three-point tone map that divides luminance into shadows (0–0.5) and highlights (0.5–1) and linearly interpolates through three custom colors. Static — does not animate.</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>shadow</td><td>[r, g, b]</td><td>[0.0, 0.0, 0.2]</td><td>Color at luminance 0</td></tr>
+      <tr><td>mid</td><td>[r, g, b]</td><td>[0.5, 0.0, 0.5]</td><td>Color at luminance 0.5</td></tr>
+      <tr><td>highlight</td><td>[r, g, b]</td><td>[1.0, 0.9, 0.5]</td><td>Color at luminance 1</td></tr>
+    </tbody>
+  </table>
+  <pre><span class="fn">glsh.effects</span>(<span class="str">'#canvas'</span>, <span class="str">'tritone'</span>, {
+  texture: img,
+  shadow:    [<span class="num">0.0, 0.0, 0.15</span>],
+  mid:       [<span class="num">0.6, 0.1, 0.4</span>],
+  highlight: [<span class="num">1.0, 1.0, 0.6</span>]
+});</pre>
+
+  <div class="divider"></div>
+
+  <h2 class="section-head">Browser Compatibility</h2>
+  <p>glsh.js requires WebGL 1.0 support. All modern browsers (Chrome 56+, Firefox 51+, Safari 15+, Edge 79+) and most mobile browsers support WebGL. The library falls back gracefully with an error if WebGL is unavailable.</p>
+
+  <div class="alert">
+    <strong>Cross-Origin Images:</strong> When using <code>imgsrc()</code> or passing image elements as textures, the image server must include appropriate CORS headers (<code>Access-Control-Allow-Origin</code>). glsh.js sets <code>crossOrigin = 'anonymous'</code> automatically on elements it creates, but elements created outside the library must have this set manually before the <code>src</code> attribute.
+  </div>
+
+  <div class="alert">
+    <strong>Video Textures:</strong> Autoplay with sound requires user interaction in most browsers. Always use <code>muted: true</code> in <code>videosrc()</code> options for reliable autoplay behavior.
+  </div>
+
+</main>
+
+</body>
+</html>

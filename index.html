@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>glsh.js v1.5.3 — Examples</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000;
+      --surface: #0d0d0d;
+      --border: #1e1e1e;
+      --accent: #5dffb8;
+      --accent2: #ff5dcd;
+      --text: #fff;
+      --muted: #888;
+      --card: #111;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      padding: 48px 40px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header h1 span { color: var(--accent); }
+
+    header .badge {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--accent);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    header nav {
+      margin-left: auto;
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    header nav a { color: var(--muted); }
+    header nav a:hover { color: var(--text); text-decoration: none; }
+
+    .hero {
+      padding: 56px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero p {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .hero p strong { color: var(--text); }
+
+    .install {
+      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .install code {
+      font-family: 'Courier New', monospace;
+      color: var(--accent);
+    }
+
+    main {
+      padding: 48px 40px;
+    }
+
+    section.group {
+      margin-bottom: 64px;
+    }
+
+    section.group h2 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-canvas {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      display: block;
+      background: #0a0a0a;
+    }
+
+    .card canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .card-body {
+      padding: 18px 20px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .card-title code {
+      color: var(--accent2);
+      font-family: 'Courier New', monospace;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .card-code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: #ccc;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .card-code .kw { color: #ff79c6; }
+    .card-code .fn { color: #50fa7b; }
+    .card-code .str { color: #f1fa8c; }
+    .card-code .num { color: #bd93f9; }
+    .card-code .cm { color: #6272a4; }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .ctrl-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .ctrl-btn.active {
+      border-color: var(--accent);
+      background: rgba(93,255,184,0.08);
+      color: var(--accent);
+    }
+
+    footer {
+      padding: 32px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 6px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span>glsh</span>.js</h1>
+  <span class="badge">v1.5.3</span>
+  <nav>
+    <a href="documentation.html">Docs</a>
+    <a href="glsh.js">Source</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <p>
+    <strong>glsh.js</strong> is a lightweight WebGL shader effects library. Apply
+    real-time GPU-powered visual effects to images and video — zero dependencies,
+    runs in any modern browser. Use <strong>glsl()</strong> for custom shaders,
+    <strong>effects()</strong> for built-in presets, and <strong>imgsrc()</strong> /
+    <strong>videosrc()</strong> to load media.
+  </p>
+  <div class="install">
+    <code>&lt;script src="glsh.js"&gt;&lt;/script&gt;</code>
+    <span style="color:var(--muted)">·</span>
+    <code>npm install glsh</code>
+  </div>
+</div>
+
+<main>
+
+  <!-- CUSTOM GLSL -->
+  <section class="group">
+    <h2>Custom GLSL Shader</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-canvas" id="wrap-glsl"></div>
+        <div class="card-body">
+          <div class="card-title"><code>glsl()</code> — Custom Fragment Shader</div>
+          <div class="card-desc">Write any GLSL fragment shader. Time, resolution and texture uniforms are injected automatically.</div>
+          <div class="card-code"><span class="kw">const</span> frag = <span class="str">`
+  precision mediump float;
+  uniform float u_time;
+  uniform vec2  u_resolution;
+  varying vec2  v_texCoord;
+  void main() {
+    vec2 uv = v_texCoord;
+    gl_FragColor = vec4(
+      sin(uv.x*6.+u_time),
+      sin(uv.y*6.+u_time+2.),
+      cos(uv.x*uv.y*10.+u_time),
+      1.0
+    );
+  }`</span>;
+
+<span class="fn">glsh.glsl</span>(<span class="str">'#wrap-glsl'</span>, frag);</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGE EFFECTS -->
+  <section class="group">
+    <h2>Image Effects — effects() with imgsrc()</h2>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-hue"></div>
+        <div class="card-body">
+          <div class="card-title"><code>hue</code></div>
+          <div class="card-desc">Rotates the hue angle over time. Accepts a base <code>angle</code> offset in radians.</div>
+          <div class="card-code"><span class="fn">glsh.imgsrc</span>(<span class="str">'photo.jpg'</span>, (err, img) => {
+  <span class="fn">glsh.effects</span>(<span class="str">'#wrap-hue'</span>, <span class="str">'hue'</span>, {
+    texture: img,
+    angle: <span class="num">1.2</span>
+  });
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-sat"></div>
+        <div class="card-body">
+          <div class="card-title"><code>saturation</code></div>
+          <div class="card-desc">Scales color saturation. <code>amount</code> of 0 = greyscale, 1 = original, 2 = vivid.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(canvas, <span class="str">'saturation'</span>, {
+  texture: img,
+  amount: <span class="num">2.5</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-rgb"></div>
+        <div class="card-body">
+          <div class="card-title"><code>rgbSplit</code></div>
+          <div class="card-desc">Separates R/G/B channels by <code>amount</code> (0–0.05 typical).</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'rgbSplit'</span>, {
+  texture: img,
+  amount: <span class="num">0.015</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-glitch"></div>
+        <div class="card-body">
+          <div class="card-title"><code>glitch</code></div>
+          <div class="card-desc">Random scanline and channel displacement. <code>intensity</code> controls frequency.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'glitch'</span>, {
+  texture: img,
+  intensity: <span class="num">0.08</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-bloom"></div>
+        <div class="card-body">
+          <div class="card-title"><code>bloom</code></div>
+          <div class="card-desc">Adds a luminance-based glow. <code>threshold</code> clips low brightness, <code>intensity</code> scales glow.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'bloom'</span>, {
+  texture: img,
+  threshold: <span class="num">0.6</span>,
+  intensity: <span class="num">2.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-blur"></div>
+        <div class="card-body">
+          <div class="card-title"><code>GaussBlur</code></div>
+          <div class="card-desc">Gaussian blur kernel. <code>radius</code> multiplies the pixel offset (1–10 recommended).</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'GaussBlur'</span>, {
+  texture: img,
+  radius: <span class="num">3.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-wave"></div>
+        <div class="card-body">
+          <div class="card-title"><code>wave</code></div>
+          <div class="card-desc">Sinusoidal UV displacement. <code>amplitude</code> controls depth, <code>frequency</code> controls density.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'wave'</span>, {
+  texture: img,
+  amplitude: <span class="num">0.04</span>,
+  frequency: <span class="num">12.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-ripple"></div>
+        <div class="card-body">
+          <div class="card-title"><code>rippleDistort</code></div>
+          <div class="card-desc">Radial ripple from center. <code>strength</code> is displacement magnitude, <code>speed</code> controls animation.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'rippleDistort'</span>, {
+  texture: img,
+  strength: <span class="num">0.06</span>,
+  speed: <span class="num">4.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-halftone"></div>
+        <div class="card-body">
+          <div class="card-title"><code>halftone</code></div>
+          <div class="card-desc">Dot-matrix halftone. <code>dotSize</code> is cells-per-row (higher = finer grid).</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'halftone'</span>, {
+  texture: img,
+  dotSize: <span class="num">40.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-rainbow"></div>
+        <div class="card-body">
+          <div class="card-title"><code>rainbow</code></div>
+          <div class="card-desc">Hue-cycle overlay blended by luminance. <code>speed</code> controls cycle rate.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'rainbow'</span>, {
+  texture: img,
+  speed: <span class="num">0.4</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-kaleido"></div>
+        <div class="card-body">
+          <div class="card-title"><code>kaleidoScope</code></div>
+          <div class="card-desc">Mirrored slice rotation. <code>segments</code> is the number of mirror facets.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'kaleidoScope'</span>, {
+  texture: img,
+  segments: <span class="num">8</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-swirl"></div>
+        <div class="card-body">
+          <div class="card-title"><code>swirl</code></div>
+          <div class="card-desc">Radial twist from center. <code>angle</code> is max twist, <code>radius</code> is falloff distance.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'swirl'</span>, {
+  texture: img,
+  angle: <span class="num">4.0</span>,
+  radius: <span class="num">0.5</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-shear"></div>
+        <div class="card-body">
+          <div class="card-title"><code>shear</code></div>
+          <div class="card-desc">UV shear displacement animated over time. <code>amountX</code> and <code>amountY</code> control axes.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'shear'</span>, {
+  texture: img,
+  amountX: <span class="num">0.3</span>,
+  amountY: <span class="num">0.0</span>
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-duotone"></div>
+        <div class="card-body">
+          <div class="card-title"><code>duotone</code></div>
+          <div class="card-desc">Maps luminance to two colors. <code>colorA</code> is shadows, <code>colorB</code> is highlights (RGB 0–1).</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'duotone'</span>, {
+  texture: img,
+  colorA: [<span class="num">0.1, 0.0, 0.4</span>],
+  colorB: [<span class="num">1.0, 0.8, 0.0</span>]
+});</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-tritone"></div>
+        <div class="card-body">
+          <div class="card-title"><code>tritone</code></div>
+          <div class="card-desc">Three-point tone mapping: <code>shadow</code>, <code>mid</code>, <code>highlight</code> — each an RGB array.</div>
+          <div class="card-code"><span class="fn">glsh.effects</span>(el, <span class="str">'tritone'</span>, {
+  texture: img,
+  shadow:    [<span class="num">0.0, 0.0, 0.2</span>],
+  mid:       [<span class="num">0.5, 0.0, 0.5</span>],
+  highlight: [<span class="num">1.0, 0.9, 0.4</span>]
+});</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRANSITIONS -->
+  <section class="group">
+    <h2>Transitions</h2>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-rippleTrans"></div>
+        <div class="card-body">
+          <div class="card-title"><code>rippleTransition</code></div>
+          <div class="card-desc">Ripple-warp blend between two textures. Drive <code>setProgress(0–1)</code> to animate.</div>
+          <div class="card-code"><span class="kw">const</span> inst = <span class="fn">glsh.effects</span>(el, <span class="str">'rippleTransition'</span>, {
+  texture: imgA,
+  texture2: imgB
+});
+inst.<span class="fn">setProgress</span>(<span class="num">0.5</span>);</div>
+          <div class="controls">
+            <button class="ctrl-btn" id="btn-ripple-play">▶ Play</button>
+            <button class="ctrl-btn" id="btn-ripple-reset">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-canvas" id="wrap-cubeTrans"></div>
+        <div class="card-body">
+          <div class="card-title"><code>cubeTransition</code></div>
+          <div class="card-desc">Perspective-simulated cube flip between two textures.</div>
+          <div class="card-code"><span class="kw">const</span> inst = <span class="fn">glsh.effects</span>(el, <span class="str">'cubeTransition'</span>, {
+  texture: imgA,
+  texture2: imgB
+});
+inst.<span class="fn">setProgress</span>(<span class="num">0.5</span>);</div>
+          <div class="controls">
+            <button class="ctrl-btn" id="btn-cube-play">▶ Play</button>
+            <button class="ctrl-btn" id="btn-cube-reset">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div><span class="status-dot"></span>glsh.js v1.5.3 — WebGL effects running</div>
+  <div><a href="documentation.html">API Documentation →</a></div>
+</footer>
+
+<script src="glsh.js"></script>
+<script>
+(function () {
+
+  // ── helpers ────────────────────────────────────────────────────────────────
+  function makeCanvas(wrapId) {
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) return null;
+    const canvas = document.createElement('canvas');
+    canvas.width = 480; canvas.height = 300;
+    canvas.style.width = '100%'; canvas.style.height = '100%';
+    wrap.appendChild(canvas);
+    return canvas;
+  }
+
+  function makeCheckerImage(w, h, colA, colB) {
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    const sz = 40;
+    for (let y = 0; y < h; y += sz) {
+      for (let x = 0; x < w; x += sz) {
+        ctx.fillStyle = ((x / sz + y / sz) % 2 === 0) ? colA : colB;
+        ctx.fillRect(x, y, sz, sz);
+      }
+    }
+    return canvas;
+  }
+
+  function makeGradImage(w, h, stops) {
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    const g = ctx.createLinearGradient(0, 0, w, h);
+    stops.forEach(([t, c]) => g.addColorStop(t, c));
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    for (let i = 0; i < 6; i++) {
+      ctx.beginPath();
+      ctx.arc(w * Math.random(), h * Math.random(), 30 + Math.random() * 60, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    return canvas;
+  }
+
+  // ── custom glsl ────────────────────────────────────────────────────────────
+  (function () {
+    const canvas = makeCanvas('wrap-glsl');
+    if (!canvas) return;
+    const frag = `
+      precision mediump float;
+      uniform float u_time;
+      varying vec2 v_texCoord;
+      void main() {
+        vec2 uv = v_texCoord;
+        gl_FragColor = vec4(
+          sin(uv.x * 8.0 + u_time) * 0.5 + 0.5,
+          sin(uv.y * 8.0 + u_time + 2.094) * 0.5 + 0.5,
+          cos((uv.x + uv.y) * 6.0 + u_time * 1.5) * 0.5 + 0.5,
+          1.0
+        );
+      }
+    `;
+    glsh.glsl(canvas, frag);
+  })();
+
+  // ── shared source images ───────────────────────────────────────────────────
+  const imgA = makeGradImage(480, 300, [[0,'#1a0045'],[0.5,'#ff2d78'],[1,'#ff8c00']]);
+  const imgB = makeGradImage(480, 300, [[0,'#003333'],[0.5,'#00ffcc'],[1,'#0066ff']]);
+
+  const defs = [
+    { id: 'wrap-hue',      effect: 'hue',          opts: { angle: 1.2 } },
+    { id: 'wrap-sat',      effect: 'saturation',    opts: { amount: 2.5 } },
+    { id: 'wrap-rgb',      effect: 'rgbSplit',      opts: { amount: 0.015 } },
+    { id: 'wrap-glitch',   effect: 'glitch',        opts: { intensity: 0.08 } },
+    { id: 'wrap-bloom',    effect: 'bloom',         opts: { threshold: 0.5, intensity: 2.5 } },
+    { id: 'wrap-blur',     effect: 'GaussBlur',     opts: { radius: 3.0 } },
+    { id: 'wrap-wave',     effect: 'wave',          opts: { amplitude: 0.04, frequency: 12.0 } },
+    { id: 'wrap-ripple',   effect: 'rippleDistort', opts: { strength: 0.06, speed: 4.0 } },
+    { id: 'wrap-halftone', effect: 'halftone',      opts: { dotSize: 40.0 } },
+    { id: 'wrap-rainbow',  effect: 'rainbow',       opts: { speed: 0.4 } },
+    { id: 'wrap-kaleido',  effect: 'kaleidoScope',  opts: { segments: 8 } },
+    { id: 'wrap-swirl',    effect: 'swirl',         opts: { angle: 4.0, radius: 0.5 } },
+    { id: 'wrap-shear',    effect: 'shear',         opts: { amountX: 0.3, amountY: 0.0 } },
+    { id: 'wrap-duotone',  effect: 'duotone',       opts: { colorA: [0.1, 0.0, 0.4], colorB: [1.0, 0.8, 0.0] } },
+    { id: 'wrap-tritone',  effect: 'tritone',       opts: { shadow: [0.0,0.0,0.2], mid: [0.5,0.0,0.5], highlight: [1.0,0.9,0.4] } },
+  ];
+
+  defs.forEach(function (d) {
+    const canvas = makeCanvas(d.id);
+    if (!canvas) return;
+    const src = (d.effect === 'halftone') ? makeCheckerImage(480, 300, '#ffffff', '#222222') : imgA;
+    glsh.effects(canvas, d.effect, Object.assign({ texture: src, width: 480, height: 300 }, d.opts));
+  });
+
+  // ── transitions ────────────────────────────────────────────────────────────
+  function makeTransition(wrapId, effectName, playBtnId, resetBtnId) {
+    const canvas = makeCanvas(wrapId);
+    if (!canvas) return;
+    const inst = glsh.effects(canvas, effectName, {
+      texture: imgA, texture2: imgB, width: 480, height: 300
+    });
+    let prog = 0, rafId = null, running = false;
+
+    function animate() {
+      prog += 0.008;
+      if (prog >= 1.0) { prog = 1.0; running = false; cancelAnimationFrame(rafId); }
+      inst.setProgress(prog);
+      if (running) rafId = requestAnimationFrame(animate);
+    }
+
+    document.getElementById(playBtnId).addEventListener('click', function () {
+      if (running) return;
+      if (prog >= 1.0) prog = 0;
+      running = true;
+      rafId = requestAnimationFrame(animate);
+    });
+
+    document.getElementById(resetBtnId).addEventListener('click', function () {
+      running = false; cancelAnimationFrame(rafId);
+      prog = 0; inst.setProgress(0);
+    });
+  }
+
+  makeTransition('wrap-rippleTrans', 'rippleTransition', 'btn-ripple-play', 'btn-ripple-reset');
+  makeTransition('wrap-cubeTrans',   'cubeTransition',   'btn-cube-play',   'btn-cube-reset');
+
+})();
+</script>
+</body>
+</html>

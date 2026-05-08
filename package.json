@@ -1,0 +1,45 @@
+{
+  "name": "glsh",
+  "version": "1.5.3",
+  "description": "WebGL shader effects library for images and video — zero dependencies",
+  "main": "glsh.js",
+  "module": "glsh.js",
+  "browser": "glsh.js",
+  "files": [
+    "glsh.js",
+    "index.html",
+    "documentation.html",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"No test suite configured\" && exit 0"
+  },
+  "keywords": [
+    "webgl",
+    "glsl",
+    "shader",
+    "effects",
+    "canvas",
+    "image",
+    "video",
+    "glitch",
+    "bloom",
+    "halftone",
+    "duotone",
+    "kaleidoscope",
+    "ripple",
+    "transition"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}
